@@ -1,45 +1,59 @@
 'use strict';
 
-const btn = document.getElementById('btn');
-const divResult = document.getElementById('result');
-const userList = document.getElementById('userList');
-const loadUserList = document.getElementById('loadUserList');
+loadHistoryChat();
 
-btn.addEventListener('click', () => {
-  const name = document.getElementById('name').value;
-  const surname = document.getElementById('surname').value;
-  const ns = `${name} ${surname}`;
+const chat = document.getElementById('chat');
+const sendBtn = document.getElementById('send');
+const username = document.getElementById('username');
 
+username.disabled = isUsername(username.value);
+
+sendBtn.addEventListener('click', () => {
+  const message = document.getElementById('message');
+
+  username.disabled = isUsername(username.value);
+
+  // Отправка на сервер
   fetch('script.php', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json'
+    },
     body: JSON.stringify({
-      ns: ns
+      username: username.value,
+      message: message.value
     })
   })
   .then(res => res.json())
-  .then(data => {
-    divResult.innerHTML = data.validate;
-  })
+  .then(data => loadHistoryChat()) // загружаем историю сообщений
   .catch(err => console.log('ERROR write: ' + err));
+
+  message.value = '';
 });
 
-loadUserList.addEventListener('click', () => {
-  userList.innerHTML = '';
+function createTagP(text) {
+  const p = document.createElement('p');
+  p.className = 'msg';
+  p.innerHTML = text;
 
+  return p;
+}
+
+function isUsername(username) {
+  return username ? true : false;
+}
+
+function loadHistoryChat() {
   fetch('script.php')
   .then(res => res.json())
-  .then(users => {
-    users.forEach(user => {
-      const li = createTagLi(user);
-      userList.appendChild(li);
+  .then(data => {
+    chat.innerHTML = '';
+
+    data.forEach(msg => {
+      chat.appendChild(createTagP(msg));
     });
-  });
-});
 
-function createTagLi(text) {
-  const li = document.createElement('li');
-  li.innerHTML = text;
-
-  return li;
+    chat.scrollTop = chat.scrollHeight;
+  })
+  .catch(err => console.log("ERROR get: " + err));
 }

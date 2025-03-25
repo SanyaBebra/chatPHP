@@ -3,18 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="main.css">
+
   <title>Chat</title>
 </head>
 <body>
-  <input type="text" id="name" placeholder="name">
-  <input type="text" id="surname" placeholder="surname">
-  <button id="btn">Send</button>
-  <div id="result"></div>
+  <h1>Chat</h1>
+  <div id="chat"></div>
 
-  <button id="loadUserList">load list</button>
-  <ul id="userList">
-    <!-- users -->
-  </ul>
+  <div class="form">
+    <input type="text" id="username" placeholder="Username">
+    <input type="text" id="message" placeholder="Сообщение...">
+    <button id="send">Send</button>
+  </div>
 
   <script src="main.js"></script>
 </body>
